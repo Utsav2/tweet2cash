@@ -15,43 +15,43 @@ from twitter import Twitter
 WIKIDATA_QUERY_URL = "https://query.wikidata.org/sparql?query=%s&format=JSON"
 
 # The HTTP headers with a User-Agent used for Wikidata requests.
-WIKIDATA_QUERY_HEADERS = {
-    "User-Agent": "Trump2Cash/1.0 (https://trump2cash.biz)"}
+WIKIDATA_QUERY_HEADERS = {"User-Agent": "Trump2Cash/1.0 (https://trump2cash.biz)"}
 
 # A Wikidata SPARQL query to find stock ticker symbols and other information
 # for a company. The string parameter is the Freebase ID of the company.
 MID_TO_TICKER_QUERY = (
-    'SELECT ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel'
-    ' WHERE {'
+    "SELECT ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel"
+    " WHERE {"
     '  ?entity wdt:P646 "%s" .'  # Entity with specified Freebase ID.
-    '  ?entity wdt:P176* ?manufacturer .'  # Entity may be product.
-    '  ?manufacturer wdt:P1366* ?company .'  # Company may have restructured.
-    '  { ?company p:P414 ?exchange } UNION'  # Company traded on exchange ...
-    '  { ?company wdt:P127+ / wdt:P1366* ?root .'  # ... or company has owner.
-    '    ?root p:P414 ?exchange } UNION'  # Owner traded on exchange or ...
-    '  { ?company wdt:P749+ / wdt:P1366* ?root .'  # ... company has parent.
-    '    ?root p:P414 ?exchange } .'  # Parent traded on exchange.
-    '  VALUES ?exchanges { wd:Q13677 wd:Q82059 } .'  # Whitelist NYSE, NASDAQ.
-    '  ?exchange ps:P414 ?exchanges .'  # Stock exchange is whitelisted.
-    '  ?exchange pq:P249 ?ticker .'  # Get ticker symbol.
-    '  ?exchange ps:P414 ?exchangeName .'  # Get name of exchange.
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude newspapers.
-    '                               wdt:P279* wd:Q11032 } .'
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude news agencies.
-    '                               wdt:P279* wd:Q192283 } .'
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude news magazines.
-    '                               wdt:P279* wd:Q1684600 } .'
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude radio stations.
-    '                               wdt:P279* wd:Q14350 } .'
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude TV stations.
-    '                               wdt:P279* wd:Q1616075 } .'
-    '  FILTER NOT EXISTS { ?company wdt:P31 /'  # Exclude TV channels.
-    '                               wdt:P279* wd:Q2001305 } .'
-    '  SERVICE wikibase:label {'
+    "  ?entity wdt:P176* ?manufacturer ."  # Entity may be product.
+    "  ?manufacturer wdt:P1366* ?company ."  # Company may have restructured.
+    "  { ?company p:P414 ?exchange } UNION"  # Company traded on exchange ...
+    "  { ?company wdt:P127+ / wdt:P1366* ?root ."  # ... or company has owner.
+    "    ?root p:P414 ?exchange } UNION"  # Owner traded on exchange or ...
+    "  { ?company wdt:P749+ / wdt:P1366* ?root ."  # ... company has parent.
+    "    ?root p:P414 ?exchange } ."  # Parent traded on exchange.
+    "  VALUES ?exchanges { wd:Q13677 wd:Q82059 } ."  # Whitelist NYSE, NASDAQ.
+    "  ?exchange ps:P414 ?exchanges ."  # Stock exchange is whitelisted.
+    "  ?exchange pq:P249 ?ticker ."  # Get ticker symbol.
+    "  ?exchange ps:P414 ?exchangeName ."  # Get name of exchange.
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude newspapers.
+    "                               wdt:P279* wd:Q11032 } ."
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude news agencies.
+    "                               wdt:P279* wd:Q192283 } ."
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude news magazines.
+    "                               wdt:P279* wd:Q1684600 } ."
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude radio stations.
+    "                               wdt:P279* wd:Q14350 } ."
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude TV stations.
+    "                               wdt:P279* wd:Q1616075 } ."
+    "  FILTER NOT EXISTS { ?company wdt:P31 /"  # Exclude TV channels.
+    "                               wdt:P279* wd:Q2001305 } ."
+    "  SERVICE wikibase:label {"
     '   bd:serviceParam wikibase:language "en" .'  # Use English labels.
-    '  }'
-    ' } GROUP BY ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel'
-    ' ORDER BY ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel')
+    "  }"
+    " } GROUP BY ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel"
+    " ORDER BY ?companyLabel ?rootLabel ?tickerLabel ?exchangeNameLabel"
+)
 
 
 class Analysis:
@@ -63,8 +63,7 @@ class Analysis:
         self.twitter = Twitter(logs_to_cloud=logs_to_cloud)
 
     def get_company_data(self, mid):
-        """Looks up stock ticker information for a company via its Freebase ID.
-        """
+        """Looks up stock ticker information for a company via its Freebase ID."""
 
         query = MID_TO_TICKER_QUERY % mid
         try:
@@ -100,9 +99,7 @@ class Analysis:
             except KeyError:
                 exchange = None
 
-            data = {"name": name,
-                    "ticker": ticker,
-                    "exchange": exchange}
+            data = {"name": name, "ticker": ticker, "exchange": exchange}
 
             # Add the root if there is one.
             if root and root != name:
@@ -133,12 +130,10 @@ class Analysis:
 
         # Run entity detection.
         document = language.types.Document(
-            content=text,
-            type=language.enums.Document.Type.PLAIN_TEXT,
-            language="en")
+            content=text, type=language.enums.Document.Type.PLAIN_TEXT, language="en"
+        )
         entities = self.language_client.analyze_entities(document).entities
-        self.logs.debug("Found entities: %s" %
-                        self.entities_tostring(entities))
+        self.logs.debug("Found entities: %s" % self.entities_tostring(entities))
 
         # Collect all entities which are publicly traded companies, i.e.
         # entities which have a known stock ticker symbol.
@@ -160,8 +155,9 @@ class Analysis:
 
             # Skip any entity for which we can't find any company data.
             if not company_data:
-                self.logs.debug("No company data found for entity: %s (%s)" %
-                                (name, mid))
+                self.logs.debug(
+                    "No company data found for entity: %s (%s)" % (name, mid)
+                )
                 continue
             self.logs.debug("Found company data: %s" % company_data)
 
@@ -169,8 +165,9 @@ class Analysis:
 
                 # Extract and add a sentiment score.
                 sentiment = self.get_sentiment(text)
-                self.logs.debug("Using sentiment for company: %f %s" %
-                                (sentiment, company))
+                self.logs.debug(
+                    "Using sentiment for company: %f %s" % (sentiment, company)
+                )
                 company["sentiment"] = sentiment
 
                 # Add the company to the list unless we already have the same
@@ -180,7 +177,8 @@ class Analysis:
                     companies.append(company)
                 else:
                     self.logs.warn(
-                        "Skipping company with duplicate ticker: %s" % company)
+                        "Skipping company with duplicate ticker: %s" % company
+                    )
 
         return companies
 
@@ -258,21 +256,19 @@ class Analysis:
     def entity_tostring(self, entity):
         """Converts one entity to a readable string."""
 
-        metadata = ", ".join(['"%s": "%s"' % (key, value) for
-                              key, value in entity.metadata.items()])
+        metadata = ", ".join(
+            ['"%s": "%s"' % (key, value) for key, value in entity.metadata.items()]
+        )
 
         mentions = ", ".join(['"%s"' % mention for mention in entity.mentions])
 
-        return ('{name: "%s",'
-                ' type: "%s",'
-                ' metadata: {%s},'
-                ' salience: %s,'
-                ' mentions: [%s]}') % (
-            entity.name,
-            entity.type,
-            metadata,
-            entity.salience,
-            mentions)
+        return (
+            '{name: "%s",'
+            ' type: "%s",'
+            " metadata: {%s},"
+            " salience: %s,"
+            " mentions: [%s]}"
+        ) % (entity.name, entity.type, metadata, entity.salience, mentions)
 
     def get_sentiment(self, text):
         """Extracts a sentiment score [-1, 1] from text."""
@@ -282,14 +278,13 @@ class Analysis:
             return 0
 
         document = language.types.Document(
-            content=text,
-            type=language.enums.Document.Type.PLAIN_TEXT,
-            language="en")
-        sentiment = self.language_client.analyze_sentiment(
-            document).document_sentiment
+            content=text, type=language.enums.Document.Type.PLAIN_TEXT, language="en"
+        )
+        sentiment = self.language_client.analyze_sentiment(document).document_sentiment
 
         self.logs.debug(
-            "Sentiment score and magnitude for text: %f %f \"%s\"" %
-            (sentiment.score, sentiment.magnitude, text))
+            'Sentiment score and magnitude for text: %f %f "%s"'
+            % (sentiment.score, sentiment.magnitude, text)
+        )
 
         return sentiment.score

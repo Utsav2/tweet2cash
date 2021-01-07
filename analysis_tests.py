@@ -41,78 +41,94 @@ def make_entity(name, type, metadata, salience, mentions):
 
 
 def test_get_company_data_1(analysis):
-    assert analysis.get_company_data("/m/035nm") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "ticker": "GM"}]
+    assert analysis.get_company_data("/m/035nm") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "ticker": "GM",
+        }
+    ]
 
 
 def test_get_company_data_2(analysis):
-    assert analysis.get_company_data("/m/04n3_w4") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Fiat",
-        "root": "Fiat Chrysler Automobiles",
-        "ticker": "FCAU"}]
+    assert analysis.get_company_data("/m/04n3_w4") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Fiat",
+            "root": "Fiat Chrysler Automobiles",
+            "ticker": "FCAU",
+        }
+    ]
 
 
 def test_get_company_data_3(analysis):
-    assert analysis.get_company_data("/m/0d8c4") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin",
-        "ticker": "LMT"}]
+    assert analysis.get_company_data("/m/0d8c4") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin",
+            "ticker": "LMT",
+        }
+    ]
 
 
 def test_get_company_data_4(analysis):
-    assert analysis.get_company_data("/m/0hkqn") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin",
-        "ticker": "LMT"}]
+    assert analysis.get_company_data("/m/0hkqn") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin",
+            "ticker": "LMT",
+        }
+    ]
 
 
 def test_get_company_data_5(analysis):
-    assert analysis.get_company_data("/m/09jcvs") == [{
-        "exchange": "NASDAQ",
-        "name": "YouTube",
-        "root": "Alphabet Inc.",
-        "ticker": "GOOG"}, {
-        "exchange": "NASDAQ",
-        "name": "YouTube",
-        "root": "Alphabet Inc.",
-        "ticker": "GOOGL"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "YouTube",
-        "root": "BlackRock",
-        "ticker": "BLK"}, {
-        "exchange": "NASDAQ",
-        "name": "YouTube",
-        "root": "Google",
-        "ticker": "GOOG"}, {
-        "exchange": "NASDAQ",
-        "name": "YouTube",
-        "root": "Google",
-        "ticker": "GOOGL"}]
+    assert analysis.get_company_data("/m/09jcvs") == [
+        {
+            "exchange": "NASDAQ",
+            "name": "YouTube",
+            "root": "Alphabet Inc.",
+            "ticker": "GOOG",
+        },
+        {
+            "exchange": "NASDAQ",
+            "name": "YouTube",
+            "root": "Alphabet Inc.",
+            "ticker": "GOOGL",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "YouTube",
+            "root": "BlackRock",
+            "ticker": "BLK",
+        },
+        {"exchange": "NASDAQ", "name": "YouTube", "root": "Google", "ticker": "GOOG"},
+        {"exchange": "NASDAQ", "name": "YouTube", "root": "Google", "ticker": "GOOGL"},
+    ]
 
 
 def test_get_company_data_6(analysis):
-    assert analysis.get_company_data("/m/045c7b") == [{
-        "exchange": "NASDAQ",
-        "name": "Google",
-        "ticker": "GOOG"}, {
-        "exchange": "NASDAQ",
-        "name": "Google",
-        "ticker": "GOOGL"}, {
-        "exchange": "NASDAQ",
-        "name": "Google",
-        "root": "Alphabet Inc.",
-        "ticker": "GOOG"}, {
-        "exchange": "NASDAQ",
-        "name": "Google",
-        "root": "Alphabet Inc.",
-        "ticker": "GOOGL"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Google",
-        "root": "BlackRock",
-        "ticker": "BLK"}]
+    assert analysis.get_company_data("/m/045c7b") == [
+        {"exchange": "NASDAQ", "name": "Google", "ticker": "GOOG"},
+        {"exchange": "NASDAQ", "name": "Google", "ticker": "GOOGL"},
+        {
+            "exchange": "NASDAQ",
+            "name": "Google",
+            "root": "Alphabet Inc.",
+            "ticker": "GOOG",
+        },
+        {
+            "exchange": "NASDAQ",
+            "name": "Google",
+            "root": "Alphabet Inc.",
+            "ticker": "GOOGL",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Google",
+            "root": "BlackRock",
+            "ticker": "BLK",
+        },
+    ]
 
 
 # def test_get_company_data_7(analysis):
@@ -128,47 +144,55 @@ def test_get_company_data_6(analysis):
 
 
 def test_get_company_data_8(analysis):
-    assert analysis.get_company_data("/m/02zs4") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Ford Motor Company",
-        "ticker": "F"}]
+    assert analysis.get_company_data("/m/02zs4") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Ford Motor Company",
+            "ticker": "F",
+        }
+    ]
 
 
 def test_get_company_data_9(analysis):
-    assert analysis.get_company_data("/m/0841v") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "ticker": "WMT"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "root": "BlackRock",
-        "ticker": "BLK"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "root": "State Street Corporation",
-        "ticker": "STT"}]
+    assert analysis.get_company_data("/m/0841v") == [
+        {"exchange": "New York Stock Exchange", "name": "Walmart", "ticker": "WMT"},
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Walmart",
+            "root": "BlackRock",
+            "ticker": "BLK",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Walmart",
+            "root": "State Street Corporation",
+            "ticker": "STT",
+        },
+    ]
 
 
 def test_get_company_data_10(analysis):
-    assert analysis.get_company_data("/m/07mb6") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Toyota",
-        "ticker": "TM"}]
+    assert analysis.get_company_data("/m/07mb6") == [
+        {"exchange": "New York Stock Exchange", "name": "Toyota", "ticker": "TM"}
+    ]
 
 
 def test_get_company_data_11(analysis):
-    assert analysis.get_company_data("/m/0178g") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "ticker": "BA"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "root": "BlackRock",
-        "ticker": "BLK"}, {
-        "exchange": "NASDAQ",
-        "name": "Boeing",
-        "root": "T. Rowe Price",
-        "ticker": "TROW"}]
+    assert analysis.get_company_data("/m/0178g") == [
+        {"exchange": "New York Stock Exchange", "name": "Boeing", "ticker": "BA"},
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Boeing",
+            "root": "BlackRock",
+            "ticker": "BLK",
+        },
+        {
+            "exchange": "NASDAQ",
+            "name": "Boeing",
+            "root": "T. Rowe Price",
+            "ticker": "TROW",
+        },
+    ]
 
 
 # def test_get_company_data_12(analysis):
@@ -180,37 +204,51 @@ def test_get_company_data_11(analysis):
 
 
 def test_get_company_data_13(analysis):
-    assert analysis.get_company_data("/m/01pkxd") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Macy's",
-        "root": "Macy's, Inc.",
-        "ticker": "M"}]
+    assert analysis.get_company_data("/m/01pkxd") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Macy's",
+            "root": "Macy's, Inc.",
+            "ticker": "M",
+        }
+    ]
 
 
 def test_get_company_data_14(analysis):
-    assert analysis.get_company_data("/m/02rnkmh") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Keystone Pipeline",
-        "root": "TransCanada Corporation",
-        "ticker": "TRP"}]
+    assert analysis.get_company_data("/m/02rnkmh") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Keystone Pipeline",
+            "root": "TransCanada Corporation",
+            "ticker": "TRP",
+        }
+    ]
 
 
 def test_get_company_data_15(analysis):
-    assert analysis.get_company_data("/m/0k9ts") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Delta Air Lines",
-        "ticker": "DAL"}]
+    assert analysis.get_company_data("/m/0k9ts") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Delta Air Lines",
+            "ticker": "DAL",
+        }
+    ]
 
 
 def test_get_company_data_16(analysis):
-    assert analysis.get_company_data("/m/033yz") == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin",
-        "ticker": "LMT"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin Aeronautics",
-        "root": "Lockheed Martin",
-        "ticker": "LMT"}]
+    assert analysis.get_company_data("/m/033yz") == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin",
+            "ticker": "LMT",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin Aeronautics",
+            "root": "Lockheed Martin",
+            "ticker": "LMT",
+        },
+    ]
 
 
 def test_get_company_data_17(analysis):
@@ -242,61 +280,79 @@ def test_get_company_data_empty(analysis):
 
 
 def test_entity_tostring_1(analysis):
-    assert analysis.entity_tostring(make_entity(
-        name="General Motors",
-        type=language.enums.Entity.Type.ORGANIZATION,
-        metadata={
-            "mid": "/m/035nm",
-            "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors"},
-        salience=0.33838183,
-        mentions=["General Motors"])) == (
-            '{name: "General Motors",'
-            ' type: "Type.ORGANIZATION",'
-            ' metadata: {"mid": "/m/035nm",'
-            ' "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors"},'
-            ' salience: 0.33838183,'
-            ' mentions: ["General Motors"]}')
+    assert analysis.entity_tostring(
+        make_entity(
+            name="General Motors",
+            type=language.enums.Entity.Type.ORGANIZATION,
+            metadata={
+                "mid": "/m/035nm",
+                "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors",
+            },
+            salience=0.33838183,
+            mentions=["General Motors"],
+        )
+    ) == (
+        '{name: "General Motors",'
+        ' type: "Type.ORGANIZATION",'
+        ' metadata: {"mid": "/m/035nm",'
+        ' "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors"},'
+        " salience: 0.33838183,"
+        ' mentions: ["General Motors"]}'
+    )
 
 
 def test_entity_tostring_2(analysis):
-    assert analysis.entity_tostring(make_entity(
-        name="jobs",
-        type=language.enums.Entity.Type.OTHER,
-        metadata={},
-        salience=0.31634554,
-        mentions=["jobs"])) == (
+    assert analysis.entity_tostring(
+        make_entity(
+            name="jobs",
+            type=language.enums.Entity.Type.OTHER,
+            metadata={},
+            salience=0.31634554,
+            mentions=["jobs"],
+        )
+    ) == (
         '{name: "jobs",'
         ' type: "Type.OTHER",'
-        ' metadata: {},'
-        ' salience: 0.31634554,'
-        ' mentions: ["jobs"]}')
+        " metadata: {},"
+        " salience: 0.31634554,"
+        ' mentions: ["jobs"]}'
+    )
 
 
 def test_entities_tostring(analysis):
-    assert analysis.entities_tostring([make_entity(
-        name="General Motors",
-        type=language.enums.Entity.Type.ORGANIZATION,
-        metadata={
-            "mid": "/m/035nm",
-            "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors"},
-        salience=0.33838183,
-        mentions=["General Motors"]), make_entity(
-        name="jobs",
-        type=language.enums.Entity.Type.OTHER,
-        metadata={},
-        salience=0.31634554,
-        mentions=["jobs"])]) == (
+    assert analysis.entities_tostring(
+        [
+            make_entity(
+                name="General Motors",
+                type=language.enums.Entity.Type.ORGANIZATION,
+                metadata={
+                    "mid": "/m/035nm",
+                    "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors",
+                },
+                salience=0.33838183,
+                mentions=["General Motors"],
+            ),
+            make_entity(
+                name="jobs",
+                type=language.enums.Entity.Type.OTHER,
+                metadata={},
+                salience=0.31634554,
+                mentions=["jobs"],
+            ),
+        ]
+    ) == (
         '[{name: "General Motors",'
         ' type: "Type.ORGANIZATION",'
         ' metadata: {"mid": "/m/035nm",'
         ' "wikipedia_url": "http://en.wikipedia.org/wiki/General_Motors"},'
-        ' salience: 0.33838183,'
+        " salience: 0.33838183,"
         ' mentions: ["General Motors"]}, '
         '{name: "jobs",'
         ' type: "Type.OTHER",'
-        ' metadata: {},'
-        ' salience: 0.31634554,'
-        ' mentions: ["jobs"]}]')
+        " metadata: {},"
+        " salience: 0.31634554,"
+        ' mentions: ["jobs"]}]'
+    )
 
 
 def test_entities_tostring_empty(analysis):
@@ -412,137 +468,187 @@ def test_get_sentiment_none(analysis):
 
 
 def test_find_companies_1(analysis):
-    assert analysis.find_companies(get_tweet("806134244384899072")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "sentiment": -0.5,
-        "ticker": "BA"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "root": "BlackRock",
-        "sentiment": -0.5,
-        "ticker": "BLK"}, {
-        "exchange": "NASDAQ",
-        "name": "Boeing",
-        "root": "T. Rowe Price",
-        "sentiment": -0.5,
-        "ticker": "TROW"}]
+    assert analysis.find_companies(get_tweet("806134244384899072")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Boeing",
+            "sentiment": -0.5,
+            "ticker": "BA",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Boeing",
+            "root": "BlackRock",
+            "sentiment": -0.5,
+            "ticker": "BLK",
+        },
+        {
+            "exchange": "NASDAQ",
+            "name": "Boeing",
+            "root": "T. Rowe Price",
+            "sentiment": -0.5,
+            "ticker": "TROW",
+        },
+    ]
 
 
 def test_find_companies_2(analysis):
-    assert analysis.find_companies(get_tweet("812061677160202240")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin",
-        "sentiment": -0.30000001192092896,
-        "ticker": "LMT"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "sentiment": -0.30000001192092896,  # 0.1
-        "ticker": "BA"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "root": "BlackRock",
-        "sentiment": -0.30000001192092896,  # 0.1
-        "ticker": "BLK"}, {
-        "exchange": "NASDAQ",
-        "name": "Boeing",
-        "root": "T. Rowe Price",
-        "sentiment": -0.30000001192092896,  # 0.1
-        "ticker": "TROW"}]
+    assert analysis.find_companies(get_tweet("812061677160202240")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin",
+            "sentiment": -0.30000001192092896,
+            "ticker": "LMT",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Boeing",
+            "sentiment": -0.30000001192092896,  # 0.1
+            "ticker": "BA",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Boeing",
+            "root": "BlackRock",
+            "sentiment": -0.30000001192092896,  # 0.1
+            "ticker": "BLK",
+        },
+        {
+            "exchange": "NASDAQ",
+            "name": "Boeing",
+            "root": "T. Rowe Price",
+            "sentiment": -0.30000001192092896,  # 0.1
+            "ticker": "TROW",
+        },
+    ]
 
 
 def test_find_companies_3(analysis):
-    assert analysis.find_companies(get_tweet("816260343391514624")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0.0,  # -0.1
-        "ticker": "GM"}]
+    assert analysis.find_companies(get_tweet("816260343391514624")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "sentiment": 0.0,  # -0.1
+            "ticker": "GM",
+        }
+    ]
 
 
 def test_find_companies_4(analysis):
-    assert analysis.find_companies(get_tweet("816324295781740544")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Ford",
-        "root": "Ford Motor Company",
-        "sentiment": -0.5,  # 0.1
-        "ticker": "F"}]
+    assert analysis.find_companies(get_tweet("816324295781740544")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Ford",
+            "root": "Ford Motor Company",
+            "sentiment": -0.5,  # 0.1
+            "ticker": "F",
+        }
+    ]
 
 
 def test_find_companies_5(analysis):
-    assert analysis.find_companies(get_tweet("816635078067490816")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Ford Motor Company",
-        "sentiment": 0.4000000059604645,
-        "ticker": "F"}]
+    assert analysis.find_companies(get_tweet("816635078067490816")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Ford Motor Company",
+            "sentiment": 0.4000000059604645,
+            "ticker": "F",
+        }
+    ]
 
 
 def test_find_companies_6(analysis):
-    assert analysis.find_companies(get_tweet("817071792711942145")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Toyota",
-        "sentiment": -0.10000000149011612,
-        "ticker": "TM"}]
+    assert analysis.find_companies(get_tweet("817071792711942145")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Toyota",
+            "sentiment": -0.10000000149011612,
+            "ticker": "TM",
+        }
+    ]
 
 
 def test_find_companies_7(analysis):
-    assert analysis.find_companies(get_tweet("818460862675558400")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Chrysler",
-        "root": "Fiat Chrysler Automobiles",
-        "sentiment": 0.0,  # 0.1
-        "ticker": "FCAU"}]
+    assert analysis.find_companies(get_tweet("818460862675558400")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Chrysler",
+            "root": "Fiat Chrysler Automobiles",
+            "sentiment": 0.0,  # 0.1
+            "ticker": "FCAU",
+        }
+    ]
 
 
 def test_find_companies_8(analysis):
-    assert analysis.find_companies(get_tweet("818461467766824961")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Ford",
-        "root": "Ford Motor Company",
-        "sentiment": 0.30000001192092896,
-        "ticker": "F"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Fiat",
-        "root": "Fiat Chrysler Automobiles",
-        "sentiment": 0.30000001192092896,
-        "ticker": "FCAU"}]
+    assert analysis.find_companies(get_tweet("818461467766824961")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Ford",
+            "root": "Ford Motor Company",
+            "sentiment": 0.30000001192092896,
+            "ticker": "F",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Fiat",
+            "root": "Fiat Chrysler Automobiles",
+            "sentiment": 0.30000001192092896,
+            "ticker": "FCAU",
+        },
+    ]
 
 
 def test_find_companies_9(analysis):
-    assert analysis.find_companies(get_tweet("821415698278875137")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0.8999999761581421,
-        "ticker": "GM"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "sentiment": 0.8999999761581421,
-        "ticker": "WMT"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "root": "BlackRock",
-        "sentiment": 0.8999999761581421,
-        "ticker": "BLK"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Walmart",
-        "root": "State Street Corporation",
-        "sentiment": 0.8999999761581421,
-        "ticker": "STT"}]
+    assert analysis.find_companies(get_tweet("821415698278875137")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "sentiment": 0.8999999761581421,
+            "ticker": "GM",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Walmart",
+            "sentiment": 0.8999999761581421,
+            "ticker": "WMT",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Walmart",
+            "root": "BlackRock",
+            "sentiment": 0.8999999761581421,
+            "ticker": "BLK",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Walmart",
+            "root": "State Street Corporation",
+            "sentiment": 0.8999999761581421,
+            "ticker": "STT",
+        },
+    ]
 
 
 def test_find_companies_10(analysis):
-    assert analysis.find_companies(get_tweet("821697182235496450")) == [{
-        # "exchange": "New York Stock Exchange",
-        # "name": "Ford Motor Company",
-        # "sentiment": -0.6000000238418579,  # 0
-        # "ticker": "F"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": -0.6000000238418579,  # 0,
-        "ticker": "GM"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "Lockheed Martin",
-        "sentiment": -0.6000000238418579,  # 0,
-        "ticker": "LMT"}]
+    assert analysis.find_companies(get_tweet("821697182235496450")) == [
+        {
+            # "exchange": "New York Stock Exchange",
+            # "name": "Ford Motor Company",
+            # "sentiment": -0.6000000238418579,  # 0
+            # "ticker": "F"}, {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "sentiment": -0.6000000238418579,  # 0,
+            "ticker": "GM",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Lockheed Martin",
+            "sentiment": -0.6000000238418579,  # 0,
+            "ticker": "LMT",
+        },
+    ]
 
 
 # def test_find_companies_11(analysis):
@@ -569,50 +675,67 @@ def test_find_companies_10(analysis):
 
 
 def test_find_companies_13(analysis):
-    assert analysis.find_companies(get_tweet("621669173534584833")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Macy's",
-        "root": "Macy's, Inc.",
-        "sentiment": -0.699999988079071,
-        "ticker": "M"}]
+    assert analysis.find_companies(get_tweet("621669173534584833")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Macy's",
+            "root": "Macy's, Inc.",
+            "sentiment": -0.699999988079071,
+            "ticker": "M",
+        }
+    ]
 
 
 def test_find_companies_14(analysis):
-    assert analysis.find_companies(get_tweet("664911913831301123")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Macy's",
-        "root": "Macy's, Inc.",
-        "sentiment": -0.10000000149011612,
-        "ticker": "M"}]
+    assert analysis.find_companies(get_tweet("664911913831301123")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Macy's",
+            "root": "Macy's, Inc.",
+            "sentiment": -0.10000000149011612,
+            "ticker": "M",
+        }
+    ]
 
 
 def test_find_companies_15(analysis):
-    assert analysis.find_companies(get_tweet("823950814163140609")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Dakota Access Pipeline",
-        "root": "Energy Transfer Partners",
-        "sentiment": 0.20000000298023224,
-        "ticker": "ETP"}]
+    assert analysis.find_companies(get_tweet("823950814163140609")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Dakota Access Pipeline",
+            "root": "Energy Transfer Partners",
+            "sentiment": 0.20000000298023224,
+            "ticker": "ETP",
+        }
+    ]
 
 
 def test_find_companies_16(analysis):
-    assert analysis.find_companies(get_tweet("824055927200423936")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Ford Motor Company",
-        "sentiment": 0.5,
-        "ticker": "F"}, {
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0.5,
-        "ticker": "GM"}]
+    assert analysis.find_companies(get_tweet("824055927200423936")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Ford Motor Company",
+            "sentiment": 0.5,
+            "ticker": "F",
+        },
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "sentiment": 0.5,
+            "ticker": "GM",
+        },
+    ]
 
 
 def test_find_companies_17(analysis):
-    assert analysis.find_companies(get_tweet("826041397232943104")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Delta Air Lines",
-        "sentiment": -0.6000000238418579,
-        "ticker": "DAL"}]
+    assert analysis.find_companies(get_tweet("826041397232943104")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Delta Air Lines",
+            "sentiment": -0.6000000238418579,
+            "ticker": "DAL",
+        }
+    ]
 
 
 def test_find_companies_18(analysis):
@@ -632,19 +755,25 @@ def test_find_companies_21(analysis):
 
 
 def test_find_companies_22(analysis):
-    assert analysis.find_companies(get_tweet("829410107406614534")) == [{
-        "exchange": "NASDAQ",
-        "name": "Intel",
-        "sentiment": 0.6000000238418579,
-        "ticker": "INTC"}]
+    assert analysis.find_companies(get_tweet("829410107406614534")) == [
+        {
+            "exchange": "NASDAQ",
+            "name": "Intel",
+            "sentiment": 0.6000000238418579,
+            "ticker": "INTC",
+        }
+    ]
 
 
 def test_find_companies_23(analysis):
-    assert analysis.find_companies(get_tweet("829356871848951809")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "Nordstrom",
-        "sentiment": -0.20000000298023224,
-        "ticker": "JWN"}]
+    assert analysis.find_companies(get_tweet("829356871848951809")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "Nordstrom",
+            "sentiment": -0.20000000298023224,
+            "ticker": "JWN",
+        }
+    ]
 
 
 # def test_find_companies_24(analysis):
@@ -666,11 +795,14 @@ def test_find_companies_23(analysis):
 
 
 def test_find_companies_25(analysis):
-    assert analysis.find_companies(get_tweet("1067494680416407552")) == [{
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0.0,
-        "ticker": "GM"}]
+    assert analysis.find_companies(get_tweet("1067494680416407552")) == [
+        {
+            "exchange": "New York Stock Exchange",
+            "name": "General Motors",
+            "sentiment": 0.0,
+            "ticker": "GM",
+        }
+    ]
 
 
 def test_find_companies_none(analysis):
@@ -681,39 +813,44 @@ def test_get_expanded_text_1(analysis):
     assert analysis.get_expanded_text(get_tweet("829410107406614534")) == (
         "Thank you Brian Krzanich, CEO of Intel. A great investment ($7 BILLIO"
         "N) in American INNOVATION and JOBS! #AmericaFirst\U0001f1fa\U0001f1f8"
-        " https://t.co/76lAiSSQ1l")
+        " https://t.co/76lAiSSQ1l"
+    )
 
 
 def test_get_expanded_text_2(analysis):
     assert analysis.get_expanded_text(get_tweet("828574430800539648")) == (
         "Any negative polls are fake news, just like the CNN, ABC, NBC polls i"
         "n the election. Sorry, people want border security and extreme vettin"
-        "g.")
+        "g."
+    )
 
 
 def test_get_expanded_text_3(analysis):
     assert analysis.get_expanded_text(get_tweet("828642511698669569")) == (
         "The failing The New York Times writes total fiction concerning me. Th"
         "ey have gotten it wrong for two years, and now are making up stories "
-        "&amp; sources!")
+        "&amp; sources!"
+    )
 
 
 def test_get_expanded_text_4(analysis):
     assert analysis.get_expanded_text(get_tweet("845334323045765121")) == (
         "Today, I was thrilled to announce a commitment of $25 BILLION &amp; 2"
         "0K AMERICAN JOBS over the next 4 years. THANK YOU Charter Communicati"
-        "ons! https://t.co/PLxUmXVl0h")
+        "ons! https://t.co/PLxUmXVl0h"
+    )
 
 
 def test_get_expanded_text_5(analysis):
     assert analysis.get_expanded_text(get_tweet("845645916732358656")) == (
         "ObamaCare will explode and we will all get together and piece togethe"
-        "r a great healthcare plan for THE PEOPLE. Do not worry!")
+        "r a great healthcare plan for THE PEOPLE. Do not worry!"
+    )
 
 
 STREAMING_TWEET_LONG = literal_eval(
     '{"contributors": None, "truncated": True, "text": "Today, I was thrilled '
-    'to announce a commitment of $25 BILLION &amp; 20K AMERICAN JOBS over the '
+    "to announce a commitment of $25 BILLION &amp; 20K AMERICAN JOBS over the "
     'next 4 years. THANK YOU\u2026 https://t.co/nWJ1hNmzoR", "is_quote_status"'
     ': False, "in_reply_to_status_id": None, "id": 845334323045765121, "favori'
     'te_count": 0, "source": "<a href=\\"http://twitter.com/download/iphone\\"'
@@ -739,7 +876,7 @@ STREAMING_TWEET_LONG = literal_eval(
     'ofile_images/1980294624/DJT_Headshot_V2_normal.jpg", "following": None, "'
     'geo_enabled": True, "profile_banner_url": "https://pbs.twimg.com/profile_'
     'banners/25073877/1489657715", "profile_background_image_url": "http://pbs'
-    '.twimg.com/profile_background_images/530021613/trump_scotland__43_of_70_c'
+    ".twimg.com/profile_background_images/530021613/trump_scotland__43_of_70_c"
     'c.jpg", "name": "Donald J. Trump", "lang": "en", "profile_background_tile'
     '": True, "favourites_count": 46, "screen_name": "realDonaldTrump", "notif'
     'cations": None, "url": None, "created_at": "Wed Mar 18 13:46:38 +0000 200'
@@ -770,7 +907,7 @@ STREAMING_TWEET_LONG = literal_eval(
     'entities": {"media": [{"expanded_url": "https://twitter.com/realDonaldTru'
     'mp/status/845334323045765121/video/1", "display_url": "pic.twitter.com/PL'
     'xUmXVl0h", "url": "https://t.co/PLxUmXVl0h", "media_url_https": "https://'
-    'pbs.twimg.com/ext_tw_video_thumb/845330366156210176/pu/img/NdRWqCDX-r734V'
+    "pbs.twimg.com/ext_tw_video_thumb/845330366156210176/pu/img/NdRWqCDX-r734V"
     'pd.jpg", "video_info": {"aspect_ratio": [16, 9], "duration_millis": 12136'
     '7, "variants": [{"url": "https://video.twimg.com/ext_tw_video/84533036615'
     '6210176/pu/vid/640x360/eu6vsoGqW43Cc64C.mp4", "bitrate": 832000, "content'
@@ -787,22 +924,24 @@ STREAMING_TWEET_LONG = literal_eval(
     'ype": "video", "id": 845330366156210176, "media_url": "http://pbs.twimg.c'
     'om/ext_tw_video_thumb/845330366156210176/pu/img/NdRWqCDX-r734Vpd.jpg"}]},'
     ' "full_text": "Today, I was thrilled to announce a commitment of $25 BILL'
-    'ION &amp; 20K AMERICAN JOBS over the next 4 years. THANK YOU Charter Comm'
+    "ION &amp; 20K AMERICAN JOBS over the next 4 years. THANK YOU Charter Comm"
     'unications! https://t.co/PLxUmXVl0h"}, "created_at": "Fri Mar 24 17:59:42'
     ' +0000 2017", "filter_level": "low", "in_reply_to_status_id_str": None, "'
-    'place": None}')
+    'place": None}'
+)
 
 
 def test_get_expanded_text_streaming_long(analysis):
     assert analysis.get_expanded_text(STREAMING_TWEET_LONG) == (
         "Today, I was thrilled to announce a commitment of $25 BILLION &amp; 2"
         "0K AMERICAN JOBS over the next 4 years. THANK YOU Charter Communicati"
-        "ons! https://t.co/PLxUmXVl0h")
+        "ons! https://t.co/PLxUmXVl0h"
+    )
 
 
 STREAMING_TWEET_SHORT = literal_eval(
     '{"contributors": None, "truncated": False, "text": "ObamaCare will explod'
-    'e and we will all get together and piece together a great healthcare plan'
+    "e and we will all get together and piece together a great healthcare plan"
     ' for THE PEOPLE. Do not worry!", "is_quote_status": False, "in_reply_to_s'
     'tatus_id": None, "id": 845645916732358656, "favorite_count": 0, "source":'
     ' "<a href=\\"http://twitter.com/download/android\\" rel=\\"nofollow\\">Tw'
@@ -833,13 +972,15 @@ STREAMING_TWEET_SHORT = literal_eval(
     'ed": False, "default_profile": False, "is_translator": False}, "geo": Non'
     'e, "in_reply_to_user_id_str": None, "lang": "en", "created_at": "Sat Mar '
     '25 14:37:52 +0000 2017", "filter_level": "low", "in_reply_to_status_id_st'
-    'r": None, "place": None}')
+    'r": None, "place": None}'
+)
 
 
 def test_get_expanded_text_streaming_short(analysis):
     assert analysis.get_expanded_text(STREAMING_TWEET_SHORT) == (
         "ObamaCare will explode and we will all get together and piece togethe"
-        "r a great healthcare plan for THE PEOPLE. Do not worry!")
+        "r a great healthcare plan for THE PEOPLE. Do not worry!"
+    )
 
 
 def test_get_expanded_text_none(analysis):
@@ -847,20 +988,19 @@ def test_get_expanded_text_none(analysis):
 
 
 def test_make_wikidata_request(analysis):
-    assert analysis.make_wikidata_request(
-        MID_TO_TICKER_QUERY % "/m/02y1vz") == [{
-            "companyLabel": {
-                "type": "literal",
-                "value": "Facebook",
-                "xml:lang": "en"},
+    assert analysis.make_wikidata_request(MID_TO_TICKER_QUERY % "/m/02y1vz") == [
+        {
+            "companyLabel": {"type": "literal", "value": "Facebook", "xml:lang": "en"},
             "rootLabel": {
                 "type": "literal",
                 "value": "Facebook, Inc.",
-                "xml:lang": "en"},
+                "xml:lang": "en",
+            },
             "exchangeNameLabel": {
                 "type": "literal",
                 "value": "NASDAQ",
-                "xml:lang": "en"},
-            "tickerLabel": {
-                "type": "literal",
-                "value": "FB"}}]
+                "xml:lang": "en",
+            },
+            "tickerLabel": {"type": "literal", "value": "FB"},
+        }
+    ]

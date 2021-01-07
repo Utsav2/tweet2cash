@@ -90,9 +90,9 @@ def should_trade(strategy, date, previous_trade_date):
     """Determines whether a trade is happening for the strategy."""
 
     # We invest the whole value, so we can only trade once a day.
-    if (previous_trade_date and
-        previous_trade_date.replace(hour=0, minute=0, second=0) ==
-            date.replace(hour=0, minute=0, second=0)):
+    if previous_trade_date and previous_trade_date.replace(
+        hour=0, minute=0, second=0
+    ) == date.replace(hour=0, minute=0, second=0):
         return False
 
     # The strategy needs to be active.
@@ -114,15 +114,16 @@ if __name__ == "__main__":
     # Look up the metadata for the tweets.
     tweets = twitter.get_all_tweets()
     if not tweets:
-        raise ValueError('no tweets')
+        raise ValueError("no tweets")
 
     events = []
     for tweet in tqdm(tweets):
         event = {}
 
         timestamp_str = tweet["created_at"]
-        timestamp = trading.utc_to_market_time(datetime.strptime(
-            timestamp_str, "%a %b %d %H:%M:%S +0000 %Y"))
+        timestamp = trading.utc_to_market_time(
+            datetime.strptime(timestamp_str, "%a %b %d %H:%M:%S +0000 %Y")
+        )
         text = twitter.get_tweet_text(tweet)
         event["timestamp"] = timestamp
         event["text"] = text
@@ -139,8 +140,7 @@ if __name__ == "__main__":
             strategy = trading.get_strategy(company, market_status)
 
             # What was the price at tweet and at EOD?
-            price = trading.get_historical_prices(
-                company["ticker"], timestamp)
+            price = trading.get_historical_prices(company["ticker"], timestamp)
             if price:
                 strategy["price_at"] = price["at"]
                 strategy["price_eod"] = price["eod"]
@@ -160,11 +160,15 @@ if __name__ == "__main__":
     # Print out the formatted benchmark results as markdown.
     print("## Benchmark Report")
     print()
-    print("This breakdown of the analysis results and market performance vali"
-          "dates the current implementation against historical data.")
+    print(
+        "This breakdown of the analysis results and market performance vali"
+        "dates the current implementation against historical data."
+    )
     print()
-    print("Use this command to regenerate the benchmark report after changes "
-          "to the algorithm or data:")
+    print(
+        "Use this command to regenerate the benchmark report after changes "
+        "to the algorithm or data:"
+    )
     print("```shell")
     print("$ python benchmark.py > benchmark.md")
     print("```")
@@ -172,8 +176,10 @@ if __name__ == "__main__":
     print()
     print("### Events overview")
     print()
-    print("Here's each tweet with the results of its analysis and individual "
-          "market performance.")
+    print(
+        "Here's each tweet with the results of its analysis and individual "
+        "market performance."
+    )
 
     for event in events:
         strategies = event["strategies"]
@@ -195,13 +201,17 @@ if __name__ == "__main__":
                 root = "-" if "root" not in strategy else strategy["root"]
                 sentiment = strategy["sentiment"]
                 sentiment_emoji = get_sentiment_emoji(sentiment)
-                print("%s | %s | %.1f %s | %s | %s" % (
-                    strategy["name"],
-                    root,
-                    sentiment,
-                    sentiment_emoji,
-                    strategy["action"],
-                    strategy["reason"]))
+                print(
+                    "%s | %s | %.1f %s | %s | %s"
+                    % (
+                        strategy["name"],
+                        root,
+                        sentiment,
+                        sentiment_emoji,
+                        strategy["action"],
+                        strategy["reason"],
+                    )
+                )
 
             print()
             print("*Performance*")
@@ -220,20 +230,28 @@ if __name__ == "__main__":
                     price_eod_str = "-"
                 ratio = get_ratio(strategy)
                 gain = format_ratio(ratio)
-                print("%s | %s | %s | %s | %s" % (
-                    strategy["ticker"],
-                    strategy["exchange"],
-                    price_at_str,
-                    price_eod_str,
-                    gain))
+                print(
+                    "%s | %s | %s | %s | %s"
+                    % (
+                        strategy["ticker"],
+                        strategy["exchange"],
+                        price_at_str,
+                        price_eod_str,
+                        gain,
+                    )
+                )
 
     print()
     print("### Fund simulation")
     print()
-    print(("This is how an initial investment of %s would have grown, includin"
-           "g fees of 2 \u00d7 %s per pair of orders. Bold means that the data"
-           " was used to trade.") % (
-               format_dollar(FUND_DOLLARS), format_dollar(TRADE_FEE)))
+    print(
+        (
+            "This is how an initial investment of %s would have grown, includin"
+            "g fees of 2 \u00d7 %s per pair of orders. Bold means that the data"
+            " was used to trade."
+        )
+        % (format_dollar(FUND_DOLLARS), format_dollar(TRADE_FEE))
+    )
     print()
     print("Time | Trade | Gain | Value | Return | Annualized")
     print("-----|-------|------|-------|--------|-----------")
@@ -248,8 +266,12 @@ if __name__ == "__main__":
 
         # Figure out what to spend on each trade.
         num_actionable_strategies = sum(
-            [1 for strategy in strategies if should_trade(
-                strategy, date, previous_trade_date)])
+            [
+                1
+                for strategy in strategies
+                if should_trade(strategy, date, previous_trade_date)
+            ]
+        )
         budget = trading.get_budget(value, num_actionable_strategies)
 
         trade = False
@@ -296,7 +318,8 @@ if __name__ == "__main__":
             date_str = format_timestamp(date)
             trade_str = "%s %s" % (
                 strategy["ticker"],
-                get_sentiment_emoji(strategy["sentiment"]))
+                get_sentiment_emoji(strategy["sentiment"]),
+            )
             ratio = get_ratio(strategy)
             gain = format_ratio(ratio)
 
@@ -304,13 +327,17 @@ if __name__ == "__main__":
                 date_str = "**%s**" % date_str
                 trade_str = "**%s**" % trade_str
 
-            print("%s | %s | %s | %s | %s | %s" % (
-                date_str,
-                trade_str,
-                gain,
-                format_dollar(value),
-                total_return,
-                annualized_return))
+            print(
+                "%s | %s | %s | %s | %s | %s"
+                % (
+                    date_str,
+                    trade_str,
+                    gain,
+                    format_dollar(value),
+                    total_return,
+                    annualized_return,
+                )
+            )
 
         if trade:
             previous_trade_date = date

@@ -46,4 +46,5 @@ def test_catch(logs, capfd):
         logs.catch()
     assert get_last_logs(4).endswith(
         'logs_tests.py", line 44, in test_catch\n    raise Exception("exceptio'
-        'n")\nException: exception\n')
+        'n")\nException: exception\n'
+    )

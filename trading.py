@@ -90,12 +90,13 @@ class Trading:
         budget = self.get_budget(balance, len(actionable_strategies))
 
         if not budget:
-            self.logs.warn("No budget for trading: %s %s %s" %
-                           (budget, balance, actionable_strategies))
+            self.logs.warn(
+                "No budget for trading: %s %s %s"
+                % (budget, balance, actionable_strategies)
+            )
             return False
 
-        self.logs.debug("Using budget: %s x $%s" %
-                        (len(actionable_strategies), budget))
+        self.logs.debug("Using budget: %s x $%s" % (len(actionable_strategies), budget))
 
         # Handle trades for each strategy.
         success = True
@@ -212,8 +213,7 @@ class Trading:
             previous_day = self.get_previous_day(timestamp)
             previous_quotes = self.get_day_quotes(ticker, previous_day)
             if not previous_quotes:
-                self.logs.error("No quotes for previous day: %s" %
-                                previous_day)
+                self.logs.error("No quotes for previous day: %s" % previous_day)
                 return None
             quote_at = previous_quotes[-1]
             quote_eod = last_quote
@@ -250,11 +250,13 @@ class Trading:
         # The timestamp is expected in market time.
         day_str = timestamp.strftime("%Y-%m-%d")
         response = polygon_client.stocks_equities_aggregates(
-            ticker, 1, "minute", day_str, day_str)
+            ticker, 1, "minute", day_str, day_str
+        )
         if not response or response.status != "OK" or not response.results:
             self.logs.error(
-                "Failed to request historical data for %s on %s: %s" % (
-                    ticker, timestamp, response))
+                "Failed to request historical data for %s on %s: %s"
+                % (ticker, timestamp, response)
+            )
             return None
 
         for result in response.results:
@@ -262,7 +264,8 @@ class Trading:
                 # Parse and convert the current minute's timestamp.
                 minute_timestamp = result["t"] / 1000
                 minute_market_time = self.utc_to_market_time(
-                    datetime.fromtimestamp(minute_timestamp))
+                    datetime.fromtimestamp(minute_timestamp)
+                )
 
                 # Use the price at the beginning of the minute.
                 price = result["o"]
@@ -302,8 +305,7 @@ class Trading:
         while not self.is_trading_day(previous_day):
             previous_day -= timedelta(days=1)
 
-        self.logs.debug("Previous trading day for %s: %s" %
-                        (timestamp, previous_day))
+        self.logs.debug("Previous trading day for %s: %s" % (timestamp, previous_day))
         return previous_day
 
     def get_next_day(self, timestamp):
@@ -315,8 +317,7 @@ class Trading:
         while not self.is_trading_day(next_day):
             next_day += timedelta(days=1)
 
-        self.logs.debug("Next trading day for %s: %s" %
-                        (timestamp, next_day))
+        self.logs.debug("Next trading day for %s: %s" % (timestamp, next_day))
         return next_day
 
     def utc_to_market_time(self, timestamp):
@@ -344,18 +345,19 @@ class Trading:
     def make_request(self, url, method="GET", body="", headers=None):
         """Makes a request to the TradeKing API."""
 
-        consumer = Consumer(key=TRADEKING_CONSUMER_KEY,
-                            secret=TRADEKING_CONSUMER_SECRET)
-        token = Token(key=TRADEKING_ACCESS_TOKEN,
-                      secret=TRADEKING_ACCESS_TOKEN_SECRET)
+        consumer = Consumer(
+            key=TRADEKING_CONSUMER_KEY, secret=TRADEKING_CONSUMER_SECRET
+        )
+        token = Token(key=TRADEKING_ACCESS_TOKEN, secret=TRADEKING_ACCESS_TOKEN_SECRET)
         client = Client(consumer, token)
 
         body_bytes = body.encode("utf-8")
-        self.logs.debug("TradeKing request: %s %s %s %s" %
-                        (url, method, body_bytes, headers))
-        response, content = client.request(url, method=method,
-                                           body=body_bytes,
-                                           headers=headers)
+        self.logs.debug(
+            "TradeKing request: %s %s %s %s" % (url, method, body_bytes, headers)
+        )
+        response, content = client.request(
+            url, method=method, body=body_bytes, headers=headers
+        )
         self.logs.debug("TradeKing response: %s %s" % (response, content))
 
         try:
@@ -459,8 +461,7 @@ class Trading:
     def get_balance(self):
         """Finds the cash balance in dollars available to spend."""
 
-        balances_url = TRADEKING_API_URL % (
-            "accounts/%s" % TRADEKING_ACCOUNT_NUMBER)
+        balances_url = TRADEKING_API_URL % ("accounts/%s" % TRADEKING_ACCOUNT_NUMBER)
         response = self.make_request(url=balances_url)
 
         if not response:
@@ -494,8 +495,7 @@ class Trading:
         response = self.make_request(url=quotes_url)
 
         if not response:
-            self.logs.error("No quotes response for %s: %s" %
-                            (ticker, response))
+            self.logs.error("No quotes response for %s: %s" % (ticker, response))
             return None
 
         try:
@@ -541,8 +541,10 @@ class Trading:
 
         # Use maximum possible quantity within the budget.
         quantity = int(budget // price)
-        self.logs.debug("Determined quantity %s for %s at $%s within $%s." %
-                        (quantity, ticker, price, budget))
+        self.logs.debug(
+            "Determined quantity %s for %s at $%s within $%s."
+            % (quantity, ticker, price, budget)
+        )
 
         return (quantity, price)
 
@@ -605,8 +607,9 @@ class Trading:
     def make_order_request(self, fixml):
         """Executes an order defined by FIXML and verifies the response."""
 
-        response = self.make_request(url=self.get_order_url(), method="POST",
-                                     body=fixml, headers=FIXML_HEADERS)
+        response = self.make_request(
+            url=self.get_order_url(), method="POST", body=fixml, headers=FIXML_HEADERS
+        )
 
         if not response:
             self.logs.error("No order response for: %s" % fixml)
@@ -622,8 +625,7 @@ class Trading:
         # The error field indicates whether the order succeeded.
         error = order_response["error"]
         if error != "Success":
-            self.logs.error("Error in order response: %s %s" %
-                            (error, order_response))
+            self.logs.error("Error in order response: %s %s" % (error, order_response))
             return False
 
         return True

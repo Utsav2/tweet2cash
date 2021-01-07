@@ -41,8 +41,7 @@ class Monitor:
     def __init__(self):
         """Creates a Web server on a background thread."""
 
-        self.server = HTTPServer((MONITOR_HOST, MONITOR_PORT),
-                                 self.MonitorHandler)
+        self.server = HTTPServer((MONITOR_HOST, MONITOR_PORT), self.MonitorHandler)
         self.thread = Thread(target=self.server.serve_forever)
         self.thread.daemon = True
 

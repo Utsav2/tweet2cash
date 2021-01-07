@@ -10,12 +10,14 @@ from sys import exc_info
 from traceback import format_exception
 
 # The format for local logs.
-LOGS_FORMAT = ("%(asctime)s "
-               "%(name)s "
-               "%(process)d "
-               "%(thread)d "
-               "%(levelname)s "
-               "%(message)s")
+LOGS_FORMAT = (
+    "%(asctime)s "
+    "%(name)s "
+    "%(process)d "
+    "%(thread)d "
+    "%(levelname)s "
+    "%(message)s"
+)
 
 # The path to the log file for local logging.
 LOG_FILE = "/tmp/tweet2cash.log"
@@ -40,7 +42,8 @@ class Logs:
 
             # Initialize the local fallback logger.
             self.fallback_logger, fallback_handler = self.get_local_logger(
-                name, FALLBACK_LOG_FILE)
+                name, FALLBACK_LOG_FILE
+            )
 
             # Redirect the backoff logs to the local fallback handler.
             backoff_logger = getLogger("backoff")
@@ -115,8 +118,9 @@ class Logs:
             self.retry_cloud_log_text(text, severity)
         except Exception:
             exception_str = self.format_exception()
-            self.fallback_logger.error("Failed to log to cloud: %s %s\n%s" %
-                                       (severity, text, exception_str))
+            self.fallback_logger.error(
+                "Failed to log to cloud: %s %s\n%s" % (severity, text, exception_str)
+            )
 
     @on_exception(expo, Exception, max_tries=8)
     def retry_cloud_log_text(self, text, severity):
@@ -135,8 +139,10 @@ class Logs:
             self.retry_report_exception(exception_str)
         except Exception:
             meta_exception_str = self.format_exception()
-            self.fallback_logger.error("Failed to report exception: %s\n%s" %
-                                       (exception_str, meta_exception_str))
+            self.fallback_logger.error(
+                "Failed to report exception: %s\n%s"
+                % (exception_str, meta_exception_str)
+            )
 
     @on_exception(expo, Exception, max_tries=8)
     def retry_report_exception(self, exception_str):

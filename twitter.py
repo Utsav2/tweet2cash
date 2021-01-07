@@ -25,6 +25,7 @@ load_dotenv()
 TWITTER_CONSUMER_KEY = getenv("TWITTER_CONSUMER_KEY")
 TWITTER_CONSUMER_SECRET = getenv("TWITTER_CONSUMER_SECRET")
 
+
 @dataclass
 class AccountData:
     bot_account_id: str
@@ -32,17 +33,22 @@ class AccountData:
     twitter_access_token: str
     twitter_access_token_secret: str
 
+
 accounts = []
 
-with open('accounts.yaml') as f:
-    for account in yaml.safe_load(f.read())['twitter_ids']:
+with open("accounts.yaml") as f:
+    for account in yaml.safe_load(f.read())["twitter_ids"]:
         for bot_account_id, account_data in account.items():
-            accounts.append(AccountData(
-                bot_account_id=bot_account_id,
-                accounts_to_monitor=[str(a) for a in account_data['accounts']],
-                twitter_access_token=getenv(account_data['twitter_access_token']),
-                twitter_access_token_secret=getenv(account_data['twitter_access_token_secret']),
-            ))   
+            accounts.append(
+                AccountData(
+                    bot_account_id=bot_account_id,
+                    accounts_to_monitor=[str(a) for a in account_data["accounts"]],
+                    twitter_access_token=getenv(account_data["twitter_access_token"]),
+                    twitter_access_token_secret=getenv(
+                        account_data["twitter_access_token_secret"]
+                    ),
+                )
+            )
 
 # The URL pattern for links to tweets.
 TWEET_URL = "https://twitter.com/%s/status/%s"
@@ -80,13 +86,17 @@ class Twitter:
         self.twitter = {}
         for account in accounts:
             auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-            auth.set_access_token(account.twitter_access_token, account.twitter_access_token_secret)
-            api = API(auth_handler=auth,
-                               retry_count=API_RETRY_COUNT,
-                               retry_delay=API_RETRY_DELAY_S,
-                               retry_errors=API_RETRY_ERRORS,
-                               wait_on_rate_limit=True,
-                               wait_on_rate_limit_notify=True)
+            auth.set_access_token(
+                account.twitter_access_token, account.twitter_access_token_secret
+            )
+            api = API(
+                auth_handler=auth,
+                retry_count=API_RETRY_COUNT,
+                retry_delay=API_RETRY_DELAY_S,
+                retry_errors=API_RETRY_ERRORS,
+                wait_on_rate_limit=True,
+                wait_on_rate_limit_notify=True,
+            )
             self.twitter[account.bot_account_id] = (auth, api)
 
         self.twitter_listener = None
@@ -95,7 +105,8 @@ class Twitter:
         """Starts streaming tweets and returning data to the callback."""
 
         self.twitter_listener = TwitterListener(
-            callback=callback, logs_to_cloud=self.logs_to_cloud)
+            callback=callback, logs_to_cloud=self.logs_to_cloud
+        )
 
         self.logs.debug("Starting stream")
         auth, _ = next(iter(self.twitter.values()))
@@ -110,8 +121,9 @@ class Twitter:
 
         # If we got here because of an API error, raise it.
         if self.twitter_listener and self.twitter_listener.get_error_status():
-            raise Exception("Twitter API error: %s" %
-                            self.twitter_listener.get_error_status())
+            raise Exception(
+                "Twitter API error: %s" % self.twitter_listener.get_error_status()
+            )
 
     def stop_streaming(self):
         """Stops the current stream."""
@@ -225,14 +237,14 @@ class Twitter:
         # use the bot account's tweets
         for account in accounts:
             _, api = self.twitter[account.bot_account_id]
-            for status in Cursor(api.user_timeline,
-                                 user_id=account.bot_account_id,
-                                 exclude_replies=True).items():
+            for status in Cursor(
+                api.user_timeline, user_id=account.bot_account_id, exclude_replies=True
+            ).items():
 
                 try:
                     quoted_tweet_id = status.quoted_status_id
                 except AttributeError:
-                    self.logs.warn('Skipping tweet: %s' % status)
+                    self.logs.warn("Skipping tweet: %s" % status)
                     continue
 
                 # Get the tweet details and add it to the list.
@@ -329,8 +341,9 @@ class TwitterListener(StreamListener):
 
         # Create a new logs instance (with its own httplib2 instance) so that
         # there is a separate one for each thread.
-        logs = Logs("twitter-listener-worker-%s" % worker_id,
-                    to_cloud=self.logs_to_cloud)
+        logs = Logs(
+            "twitter-listener-worker-%s" % worker_id, to_cloud=self.logs_to_cloud
+        )
 
         logs.debug("Started worker thread: %s" % worker_id)
         while not self.stop_event.is_set():
@@ -341,11 +354,12 @@ class TwitterListener(StreamListener):
                 self.queue.task_done()
                 end_time = time()
                 qsize = self.queue.qsize()
-                logs.debug("Worker %s took %.f ms with %d tasks remaining." %
-                           (worker_id, end_time - start_time, qsize))
+                logs.debug(
+                    "Worker %s took %.f ms with %d tasks remaining."
+                    % (worker_id, end_time - start_time, qsize)
+                )
             except Empty:
-                logs.debug("Worker %s timed out on an empty queue." %
-                           worker_id)
+                logs.debug("Worker %s timed out on an empty queue." % worker_id)
                 continue
             except Exception:
                 # The main loop doesn't catch and report exceptions from
@@ -403,8 +417,7 @@ class TwitterListener(StreamListener):
                     break
 
         if not found:
-            logs.debug("Skipping tweet from user: %s (%s)" %
-                       (screen_name, user_id_str))
+            logs.debug("Skipping tweet from user: %s (%s)" % (screen_name, user_id_str))
             return
 
         logs.info("Examining tweet: %s" % tweet)

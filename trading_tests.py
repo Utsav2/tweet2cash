@@ -34,113 +34,153 @@ def test_environment_variables():
 
 
 def test_get_strategy_blacklist(trading):
-    assert trading.get_strategy({
+    assert trading.get_strategy(
+        {"exchange": "NASDAQ", "name": "Google", "sentiment": 0.4, "ticker": "GOOG"},
+        "open",
+    ) == {
+        "action": "hold",
         "exchange": "NASDAQ",
         "name": "Google",
+        "reason": "blacklist",
         "sentiment": 0.4,
-        "ticker": "GOOG"}, "open") == {
-            "action": "hold",
-            "exchange": "NASDAQ",
-            "name": "Google",
-            "reason": "blacklist",
-            "sentiment": 0.4,
-            "ticker": "GOOG"}
-    assert trading.get_strategy({
-        "exchange": "New York Stock Exchange",
-        "name": "Ford",
-        "sentiment": 0.3,
-        "ticker": "F"}, "open") == {
-            "action": "bull",
+        "ticker": "GOOG",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "Ford",
-            "reason": "positive sentiment",
             "sentiment": 0.3,
-            "ticker": "F"}
+            "ticker": "F",
+        },
+        "open",
+    ) == {
+        "action": "bull",
+        "exchange": "New York Stock Exchange",
+        "name": "Ford",
+        "reason": "positive sentiment",
+        "sentiment": 0.3,
+        "ticker": "F",
+    }
 
 
 def test_get_strategy_market_status(trading):
-    assert trading.get_strategy({
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0.5,
-        "ticker": "GM"}, "pre") == {
-            "action": "bull",
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "General Motors",
-            "reason": "positive sentiment",
             "sentiment": 0.5,
-            "ticker": "GM"}
-    assert trading.get_strategy({
+            "ticker": "GM",
+        },
+        "pre",
+    ) == {
+        "action": "bull",
         "exchange": "New York Stock Exchange",
         "name": "General Motors",
+        "reason": "positive sentiment",
         "sentiment": 0.5,
-        "ticker": "GM"}, "open") == {
-            "action": "bull",
+        "ticker": "GM",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "General Motors",
-            "reason": "positive sentiment",
             "sentiment": 0.5,
-            "ticker": "GM"}
-    assert trading.get_strategy({
+            "ticker": "GM",
+        },
+        "open",
+    ) == {
+        "action": "bull",
         "exchange": "New York Stock Exchange",
         "name": "General Motors",
+        "reason": "positive sentiment",
         "sentiment": 0.5,
-        "ticker": "GM"}, "after") == {
-            "action": "hold",
+        "ticker": "GM",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "General Motors",
-            "reason": "market closed",
             "sentiment": 0.5,
-            "ticker": "GM"}
-    assert trading.get_strategy({
+            "ticker": "GM",
+        },
+        "after",
+    ) == {
+        "action": "hold",
         "exchange": "New York Stock Exchange",
         "name": "General Motors",
+        "reason": "market closed",
         "sentiment": 0.5,
-        "ticker": "GM"}, "close") == {
-            "action": "hold",
+        "ticker": "GM",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "General Motors",
-            "reason": "market closed",
             "sentiment": 0.5,
-            "ticker": "GM"}
+            "ticker": "GM",
+        },
+        "close",
+    ) == {
+        "action": "hold",
+        "exchange": "New York Stock Exchange",
+        "name": "General Motors",
+        "reason": "market closed",
+        "sentiment": 0.5,
+        "ticker": "GM",
+    }
 
 
 def test_get_strategy_sentiment(trading):
-    assert trading.get_strategy({
-        "exchange": "New York Stock Exchange",
-        "name": "General Motors",
-        "sentiment": 0,
-        "ticker": "GM"}, "open") == {
-            "action": "hold",
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "General Motors",
-            "reason": "neutral sentiment",
             "sentiment": 0,
-            "ticker": "GM"}
-    assert trading.get_strategy({
+            "ticker": "GM",
+        },
+        "open",
+    ) == {
+        "action": "hold",
         "exchange": "New York Stock Exchange",
-        "name": "Ford",
-        "sentiment": 0.5,
-        "ticker": "F"}, "open") == {
-            "action": "bull",
+        "name": "General Motors",
+        "reason": "neutral sentiment",
+        "sentiment": 0,
+        "ticker": "GM",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "Ford",
-            "reason": "positive sentiment",
             "sentiment": 0.5,
-            "ticker": "F"}
-    assert trading.get_strategy({
+            "ticker": "F",
+        },
+        "open",
+    ) == {
+        "action": "bull",
         "exchange": "New York Stock Exchange",
-        "name": "Fiat",
-        "root": "Fiat Chrysler Automobiles",
-        "sentiment": -0.5,
-        "ticker": "FCAU"}, "open") == {
-            "action": "bear",
+        "name": "Ford",
+        "reason": "positive sentiment",
+        "sentiment": 0.5,
+        "ticker": "F",
+    }
+    assert trading.get_strategy(
+        {
             "exchange": "New York Stock Exchange",
             "name": "Fiat",
-            "reason": "negative sentiment",
             "root": "Fiat Chrysler Automobiles",
             "sentiment": -0.5,
-            "ticker": "FCAU"}
+            "ticker": "FCAU",
+        },
+        "open",
+    ) == {
+        "action": "bear",
+        "exchange": "New York Stock Exchange",
+        "name": "Fiat",
+        "reason": "negative sentiment",
+        "root": "Fiat Chrysler Automobiles",
+        "sentiment": -0.5,
+        "ticker": "FCAU",
+    }
 
 
 def test_get_budget(trading):
@@ -151,15 +191,15 @@ def test_get_budget(trading):
 
 
 def test_utc_to_market_time(trading):
-    assert trading.utc_to_market_time(datetime(
-        2017, 1, 3, 16, 44, 13)) == as_market_time(
-        2017, 1, 3, 11, 44, 13)
+    assert trading.utc_to_market_time(
+        datetime(2017, 1, 3, 16, 44, 13)
+    ) == as_market_time(2017, 1, 3, 11, 44, 13)
 
 
 def test_market_time_to_utc(trading):
-    assert trading.market_time_to_utc(datetime(
-        2017, 1, 3, 11, 44, 13)) == datetime(
-        2017, 1, 3, 16, 44, 13, tzinfo=utc)
+    assert trading.market_time_to_utc(datetime(2017, 1, 3, 11, 44, 13)) == datetime(
+        2017, 1, 3, 16, 44, 13, tzinfo=utc
+    )
 
 
 def test_make_request_success(trading):
@@ -183,8 +223,9 @@ def test_fixml_buy_now(trading):
         '<Order TmInForce="0" Typ="2" Side="1" Px="38.32" Acct="%s">'
         '<Instrmt SecTyp="CS" Sym="GM"/>'
         '<OrdQty Qty="23"/>'
-        '</Order>'
-        '</FIXML>' % TRADEKING_ACCOUNT_NUMBER)
+        "</Order>"
+        "</FIXML>" % TRADEKING_ACCOUNT_NUMBER
+    )
 
 
 def test_fixml_sell_eod(trading):
@@ -193,8 +234,9 @@ def test_fixml_sell_eod(trading):
         '<Order TmInForce="7" Typ="2" Side="2" Px="31.36" Acct="%s">'
         '<Instrmt SecTyp="CS" Sym="GM"/>'
         '<OrdQty Qty="23"/>'
-        '</Order>'
-        '</FIXML>' % TRADEKING_ACCOUNT_NUMBER)
+        "</Order>"
+        "</FIXML>" % TRADEKING_ACCOUNT_NUMBER
+    )
 
 
 def test_fixml_short_now(trading):
@@ -203,8 +245,9 @@ def test_fixml_short_now(trading):
         '<Order TmInForce="0" Typ="2" Side="5" Px="31.36" Acct="%s">'
         '<Instrmt SecTyp="CS" Sym="GM"/>'
         '<OrdQty Qty="23"/>'
-        '</Order>'
-        '</FIXML>' % TRADEKING_ACCOUNT_NUMBER)
+        "</Order>"
+        "</FIXML>" % TRADEKING_ACCOUNT_NUMBER
+    )
 
 
 def test_fixml_cover_eod(trading):
@@ -214,8 +257,9 @@ def test_fixml_cover_eod(trading):
         ' Acct="%s">'
         '<Instrmt SecTyp="CS" Sym="GM"/>'
         '<OrdQty Qty="23"/>'
-        '</Order>'
-        '</FIXML>' % TRADEKING_ACCOUNT_NUMBER)
+        "</Order>"
+        "</FIXML>" % TRADEKING_ACCOUNT_NUMBER
+    )
 
 
 def test_get_buy_limit(trading):
@@ -242,9 +286,11 @@ def test_get_market_status(trading):
 
 
 def test_get_order_url(trading):
-    assert trading.get_order_url() == (
-        "https://api.tradeking.com/v1/accounts/%s/"
-        "orders/preview.json") % TRADEKING_ACCOUNT_NUMBER
+    assert (
+        trading.get_order_url()
+        == ("https://api.tradeking.com/v1/accounts/%s/" "orders/preview.json")
+        % TRADEKING_ACCOUNT_NUMBER
+    )
 
 
 def test_get_quantity(trading):
@@ -255,144 +301,142 @@ def test_get_quantity(trading):
 
 def test_get_historical_prices_1(trading):
     assert trading.get_historical_prices(
-        "TSLA", as_market_time(2020, 5, 12, 6, 40, 0)) == {
-            "at": 821.00, "eod": 795.68}
+        "TSLA", as_market_time(2020, 5, 12, 6, 40, 0)
+    ) == {"at": 821.00, "eod": 795.68}
 
 
 def test_get_historical_prices_2(trading):
     assert trading.get_historical_prices(
-        "TWTR", as_market_time(2020, 5, 27, 13, 22, 0)) == {
-            "at": 32.96, "eod": 32.15}
+        "TWTR", as_market_time(2020, 5, 27, 13, 22, 0)
+    ) == {"at": 32.96, "eod": 32.15}
 
 
 def test_get_historical_prices_3(trading):
     assert trading.get_historical_prices(
-        "F", as_market_time(2017, 1, 24, 19, 46, 57)) == {
-            "at": 12.58, "eod": 12.60}
+        "F", as_market_time(2017, 1, 24, 19, 46, 57)
+    ) == {"at": 12.58, "eod": 12.60}
 
 
 def test_get_historical_prices_4(trading):
     assert trading.get_historical_prices(
-        "GM", as_market_time(2017, 1, 24, 19, 46, 57)) == {
-            "at": 37.00, "eod": 37.05}
+        "GM", as_market_time(2017, 1, 24, 19, 46, 57)
+    ) == {"at": 37.00, "eod": 37.05}
 
 
 def test_get_historical_prices_5(trading):
     assert trading.get_historical_prices(
-        "BLK", as_market_time(2017, 1, 18, 8, 0, 51)) == {
-            "at": 374.80, "eod": 378.00}
+        "BLK", as_market_time(2017, 1, 18, 8, 0, 51)
+    ) == {"at": 374.80, "eod": 378.00}
 
 
 def test_get_historical_prices_6(trading):
     assert trading.get_historical_prices(
-        "F", as_market_time(2017, 1, 18, 7, 34, 9)) == {
-            "at": 12.49, "eod": 12.42}
+        "F", as_market_time(2017, 1, 18, 7, 34, 9)
+    ) == {"at": 12.49, "eod": 12.42}
 
 
 def test_get_historical_prices_7(trading):
     assert trading.get_historical_prices(
-        "GM", as_market_time(2017, 1, 18, 7, 34, 9)) == {
-            "at": 37.35, "eod": 37.45}
+        "GM", as_market_time(2017, 1, 18, 7, 34, 9)
+    ) == {"at": 37.35, "eod": 37.45}
 
 
 def test_get_historical_prices_8(trading):
     assert trading.get_historical_prices(
-        "LMT", as_market_time(2017, 1, 18, 7, 34, 9)) == {
-            "at": 254.12, "eod": 254.07}
+        "LMT", as_market_time(2017, 1, 18, 7, 34, 9)
+    ) == {"at": 254.12, "eod": 254.07}
 
 
 def test_get_historical_prices_9(trading):
     assert trading.get_historical_prices(
-        "GM", as_market_time(2017, 1, 17, 12, 55, 38)) == {
-            "at": 37.54, "eod": 37.35}
+        "GM", as_market_time(2017, 1, 17, 12, 55, 38)
+    ) == {"at": 37.54, "eod": 37.35}
 
 
 def test_get_historical_prices_10(trading):
     assert trading.get_historical_prices(
-        "STT", as_market_time(2017, 1, 17, 12, 55, 38)) == {
-            "at": 81.19, "eod": 80.2}
+        "STT", as_market_time(2017, 1, 17, 12, 55, 38)
+    ) == {"at": 81.19, "eod": 80.2}
 
 
 def test_get_historical_prices_11(trading):
     assert trading.get_historical_prices(
-        "WMT", as_market_time(2017, 1, 17, 12, 55, 38)) == {
-            "at": 68.53, "eod": 68.47}
+        "WMT", as_market_time(2017, 1, 17, 12, 55, 38)
+    ) == {"at": 68.53, "eod": 68.47}
 
 
 def test_get_historical_prices_12(trading):
     assert trading.get_historical_prices(
-        "F", as_market_time(2017, 1, 9, 9, 16, 34)) == {
-            "at": 12.84, "eod": 12.62}
+        "F", as_market_time(2017, 1, 9, 9, 16, 34)
+    ) == {"at": 12.84, "eod": 12.62}
 
 
 def test_get_historical_prices_13(trading):
     assert trading.get_historical_prices(
-        "FCAU", as_market_time(2017, 1, 9, 9, 16, 34)) == {
-            "at": 10.57, "eod": 10.61}
+        "FCAU", as_market_time(2017, 1, 9, 9, 16, 34)
+    ) == {"at": 10.57, "eod": 10.61}
 
 
 def test_get_historical_prices_14(trading):
     assert trading.get_historical_prices(
-        "FCAU", as_market_time(2017, 1, 9, 9, 14, 10)) == {
-            "at": 10.55, "eod": 10.61}
+        "FCAU", as_market_time(2017, 1, 9, 9, 14, 10)
+    ) == {"at": 10.55, "eod": 10.61}
 
 
 def test_get_historical_prices_15(trading):
     assert trading.get_historical_prices(
-        "TM", as_market_time(2017, 1, 5, 13, 14, 30)) == {
-            "at": 121.12, "eod": 119.94}
+        "TM", as_market_time(2017, 1, 5, 13, 14, 30)
+    ) == {"at": 121.12, "eod": 119.94}
 
 
 def test_get_historical_prices_16(trading):
-    assert trading.get_historical_prices(
-        "F", as_market_time(2017, 1, 4, 8, 19, 9)) == {
-            "at": 12.69, "eod": 13.2}
+    assert trading.get_historical_prices("F", as_market_time(2017, 1, 4, 8, 19, 9)) == {
+        "at": 12.69,
+        "eod": 13.2,
+    }
 
 
 def test_get_historical_prices_17(trading):
     assert trading.get_historical_prices(
-        "F", as_market_time(2017, 1, 3, 11, 44, 13)) == {
-            "at": 12.41, "eod": 12.60}
+        "F", as_market_time(2017, 1, 3, 11, 44, 13)
+    ) == {"at": 12.41, "eod": 12.60}
 
 
 def test_get_historical_prices_18(trading):
     assert trading.get_historical_prices(
-        "GM", as_market_time(2017, 1, 3, 7, 30, 5)) == {
-            "at": 35.03, "eod": 35.15}
+        "GM", as_market_time(2017, 1, 3, 7, 30, 5)
+    ) == {"at": 35.03, "eod": 35.15}
 
 
 def test_get_historical_prices_19(trading):
     assert trading.get_historical_prices(
-        "BA", as_market_time(2016, 12, 22, 17, 26, 5)) == {
-            "at": 157.69, "eod": 158.50}
+        "BA", as_market_time(2016, 12, 22, 17, 26, 5)
+    ) == {"at": 157.69, "eod": 158.50}
 
 
 def test_get_historical_prices_20(trading):
     assert trading.get_historical_prices(
-        "BA", as_market_time(2016, 12, 6, 8, 52, 35)) == {
-            "at": 151.70, "eod": 152.02}
+        "BA", as_market_time(2016, 12, 6, 8, 52, 35)
+    ) == {"at": 151.70, "eod": 152.02}
 
 
 def test_get_historical_prices_21(trading):
     assert trading.get_historical_prices(
-        "M", as_market_time(2015, 11, 12, 16, 5, 28)) == {
-            "at": 40.73, "eod": 40.31}
+        "M", as_market_time(2015, 11, 12, 16, 5, 28)
+    ) == {"at": 40.73, "eod": 40.31}
 
 
 def test_get_historical_prices_22(trading):
     assert trading.get_historical_prices(
-        "M", as_market_time(2015, 7, 16, 9, 14, 15)) == {
-            "at": 71.75, "eod": 72.80}
+        "M", as_market_time(2015, 7, 16, 9, 14, 15)
+    ) == {"at": 71.75, "eod": 72.80}
 
 
 def test_get_day_quotes(trading):
-    quotes = trading.get_day_quotes(
-        "F", as_market_time(2020, 5, 21, 20, 20, 0))
+    quotes = trading.get_day_quotes("F", as_market_time(2020, 5, 21, 20, 20, 0))
     assert len(quotes) == 660
-    assert quotes[0] == {
-        "price": 5.41, "time": as_market_time(2020, 5, 21, 4, 10, 0)}
-    assert quotes[-1] == {
-        "price": 5.64, "time": as_market_time(2020, 5, 21, 19, 59, 0)}
+    assert quotes[0] == {"price": 5.41, "time": as_market_time(2020, 5, 21, 4, 10, 0)}
+    assert quotes[-1] == {"price": 5.64, "time": as_market_time(2020, 5, 21, 19, 59, 0)}
 
 
 def test_is_trading_day(trading):
@@ -407,52 +451,71 @@ def test_is_trading_day(trading):
 
 
 def test_get_previous_day(trading):
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 22)) == as_market_time(2017, 1, 20)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 23)) == as_market_time(2017, 1, 20)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 24)) == as_market_time(2017, 1, 23)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 25)) == as_market_time(2017, 1, 24)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 26)) == as_market_time(2017, 1, 25)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 27)) == as_market_time(2017, 1, 26)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 28)) == as_market_time(2017, 1, 27)
-    assert trading.get_previous_day(as_market_time(
-        2017, 1, 3)) == as_market_time(2016, 12, 30)
+    assert trading.get_previous_day(as_market_time(2017, 1, 22)) == as_market_time(
+        2017, 1, 20
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 23)) == as_market_time(
+        2017, 1, 20
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 24)) == as_market_time(
+        2017, 1, 23
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 25)) == as_market_time(
+        2017, 1, 24
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 26)) == as_market_time(
+        2017, 1, 25
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 27)) == as_market_time(
+        2017, 1, 26
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 28)) == as_market_time(
+        2017, 1, 27
+    )
+    assert trading.get_previous_day(as_market_time(2017, 1, 3)) == as_market_time(
+        2016, 12, 30
+    )
 
 
 def test_get_next_day(trading):
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 22)) == as_market_time(2017, 1, 23)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 23)) == as_market_time(2017, 1, 24)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 24)) == as_market_time(2017, 1, 25)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 25)) == as_market_time(2017, 1, 26)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 26)) == as_market_time(2017, 1, 27)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 27)) == as_market_time(2017, 1, 30)
-    assert trading.get_next_day(as_market_time(
-        2017, 1, 28)) == as_market_time(2017, 1, 30)
-    assert trading.get_next_day(as_market_time(
-        2016, 12, 30)) == as_market_time(2017, 1, 3)
+    assert trading.get_next_day(as_market_time(2017, 1, 22)) == as_market_time(
+        2017, 1, 23
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 23)) == as_market_time(
+        2017, 1, 24
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 24)) == as_market_time(
+        2017, 1, 25
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 25)) == as_market_time(
+        2017, 1, 26
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 26)) == as_market_time(
+        2017, 1, 27
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 27)) == as_market_time(
+        2017, 1, 30
+    )
+    assert trading.get_next_day(as_market_time(2017, 1, 28)) == as_market_time(
+        2017, 1, 30
+    )
+    assert trading.get_next_day(as_market_time(2016, 12, 30)) == as_market_time(
+        2017, 1, 3
+    )
 
 
 def test_make_order_request_success(trading):
     assert not USE_REAL_MONEY
-    assert trading.make_order_request((
-        '<FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2">'
-        '<Order TmInForce="0" Typ="2" Side="1" Px="38.32" Acct="%s">'
-        '<Instrmt SecTyp="CS" Sym="GM"/>'
-        '<OrdQty Qty="23"/>'
-        '</Order>'
-        '</FIXML>' % TRADEKING_ACCOUNT_NUMBER))
+    assert trading.make_order_request(
+        (
+            '<FIXML xmlns="http://www.fixprotocol.org/FIXML-5-0-SP2">'
+            '<Order TmInForce="0" Typ="2" Side="1" Px="38.32" Acct="%s">'
+            '<Instrmt SecTyp="CS" Sym="GM"/>'
+            '<OrdQty Qty="23"/>'
+            "</Order>"
+            "</FIXML>" % TRADEKING_ACCOUNT_NUMBER
+        )
+    )
 
 
 def test_make_order_request_fail(trading):
@@ -491,8 +554,13 @@ def test_make_trades_success(trading):
 
 def test_make_trades_fail(trading):
     assert not USE_REAL_MONEY
-    assert not trading.make_trades([{
-        "exchange": "New York Stock Exchange",
-        "name": "Boeing",
-        "sentiment": 0,
-        "ticker": "BA"}])
+    assert not trading.make_trades(
+        [
+            {
+                "exchange": "New York Stock Exchange",
+                "name": "Boeing",
+                "sentiment": 0,
+                "ticker": "BA",
+            }
+        ]
+    )
