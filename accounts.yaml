@@ -9,6 +9,7 @@ twitter_ids:
 
   - 1347085437483974657: # @TechTweetTrack
       accounts: 
+        - 3291691 # @Chamath
         - 705165276845731840 # @eeshan_agarwal
         - 741461784704339968 # @utsav_sha
       twitter_access_token: TECH_TWEET_TRACK_ACCESS_TOKEN # env var
