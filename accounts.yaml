@@ -1,0 +1,8 @@
+# mapping of bot accounts -> [list of accounts to analyze]
+
+twitter_ids:
+  - 1347003406850772994: # @ChamathTrades
+      accounts: 
+        - 3291691 # @Chamath
+      twitter_access_token: TODO # fix
+      twitter_access_token_secret: TODO # fix

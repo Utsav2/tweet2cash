@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from json import loads
 from os import getenv
 from queue import Empty
@@ -10,24 +11,38 @@ from tweepy import Cursor
 from tweepy import OAuthHandler
 from tweepy import Stream
 from tweepy.streaming import StreamListener
+from typing import List
+import yaml
 
 from logs import Logs
+from dotenv import load_dotenv
 
-# The keys for the Twitter account we're using for API requests and tweeting
-# alerts (@Trump2Cash). Read from environment variables.
-TWITTER_ACCESS_TOKEN = getenv("TWITTER_ACCESS_TOKEN")
-TWITTER_ACCESS_TOKEN_SECRET = getenv("TWITTER_ACCESS_TOKEN_SECRET")
+load_dotenv()
+
 
 # The keys for the Twitter app we're using for API requests
 # (https://apps.twitter.com/app/13239588). Read from environment variables.
 TWITTER_CONSUMER_KEY = getenv("TWITTER_CONSUMER_KEY")
 TWITTER_CONSUMER_SECRET = getenv("TWITTER_CONSUMER_SECRET")
 
-# The user ID of @realDonaldTrump.
-TRUMP_USER_ID = "25073877"
+@dataclass
+class AccountData:
+    bot_account_id: str
+    accounts_to_monitor: List[str]
+    twitter_access_token: str
+    twitter_access_token_secret: str
 
-# The user ID of @Trump2Cash.
-TRUMP2CASH_USER_ID = "812529080998432769"
+accounts = []
+
+with open('accounts.yaml') as f:
+    for account in yaml.safe_load(f.read())['twitter_ids']:
+        for bot_account_id, account_data in account.items():
+            accounts.append(AccountData(
+                bot_account_id=bot_account_id,
+                accounts_to_monitor=[str(a) for a in account_data['accounts']],
+                twitter_access_token=getenv(account_data['twitter_access_token']),
+                twitter_access_token_secret=getenv(account_data['twitter_access_token_secret']),
+            ))   
 
 # The URL pattern for links to tweets.
 TWEET_URL = "https://twitter.com/%s/status/%s"
@@ -38,7 +53,7 @@ EMOJI_THUMBS_DOWN = "\U0001f44e"
 EMOJI_SHRUG = "¯\\_(\u30c4)_/¯"
 
 # The maximum number of characters in a tweet.
-MAX_TWEET_SIZE = 140
+MAX_TWEET_SIZE = 280
 
 # The number of worker threads processing tweets.
 NUM_THREADS = 100
@@ -62,16 +77,18 @@ class Twitter:
     def __init__(self, logs_to_cloud):
         self.logs_to_cloud = logs_to_cloud
         self.logs = Logs(name="twitter", to_cloud=self.logs_to_cloud)
-        self.twitter_auth = OAuthHandler(TWITTER_CONSUMER_KEY,
-                                         TWITTER_CONSUMER_SECRET)
-        self.twitter_auth.set_access_token(TWITTER_ACCESS_TOKEN,
-                                           TWITTER_ACCESS_TOKEN_SECRET)
-        self.twitter_api = API(auth_handler=self.twitter_auth,
+        self.twitter = {}
+        for account in accounts:
+            auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+            auth.set_access_token(account.twitter_access_token, account.twitter_access_token_secret)
+            api = API(auth_handler=auth,
                                retry_count=API_RETRY_COUNT,
                                retry_delay=API_RETRY_DELAY_S,
                                retry_errors=API_RETRY_ERRORS,
                                wait_on_rate_limit=True,
                                wait_on_rate_limit_notify=True)
+            self.twitter[account.bot_account_id] = (auth, api)
+
         self.twitter_listener = None
 
     def start_streaming(self, callback):
@@ -79,10 +96,12 @@ class Twitter:
 
         self.twitter_listener = TwitterListener(
             callback=callback, logs_to_cloud=self.logs_to_cloud)
-        twitter_stream = Stream(self.twitter_auth, self.twitter_listener)
 
-        self.logs.debug("Starting stream.")
-        twitter_stream.filter(follow=[TRUMP_USER_ID])
+        self.logs.debug("Starting streams")
+        for account in accounts:
+            auth, _ = self.twitter[account.bot_account_id]
+            twitter_stream = Stream(auth, self.twitter_listener)
+            twitter_stream.filter(follow=account.accounts_to_monitor)
 
         # If we got here because of an API error, raise it.
         if self.twitter_listener and self.twitter_listener.get_error_status():
@@ -108,8 +127,15 @@ class Twitter:
         link = self.get_tweet_link(tweet)
         text = self.make_tweet_text(companies, link)
 
+        try:
+            user_id_str = tweet["user"]["id_str"]
+        except KeyError:
+            self.logs.error("Malformed tweet: %s" % tweet)
+            return
+
+        _, api = self.twitter[user_id_str]
         self.logs.info("Tweeting: %s" % text)
-        self.twitter_api.update_status(text)
+        api.update_status(text)
 
     def make_tweet_text(self, companies, link):
         """Generates the text for a tweet."""
@@ -174,7 +200,9 @@ class Twitter:
         """Looks up metadata for a single tweet."""
 
         # Use tweet_mode=extended so we get the full text.
-        status = self.twitter_api.get_status(tweet_id, tweet_mode="extended")
+        _, api = next(iter(self.twitter.values()))
+
+        status = api.get_status(tweet_id, tweet_mode="extended")
         if not status:
             self.logs.error("Bad status response: %s" % status)
             return None
@@ -188,21 +216,22 @@ class Twitter:
         tweets = []
 
         # Only the 3,200 most recent tweets are available through the API. Use
-        # the @Trump2Cash account to filter down to the relevant ones.
-        for status in Cursor(self.twitter_api.user_timeline,
-                             user_id=TRUMP2CASH_USER_ID,
-                             exclude_replies=True).items():
+        # the bot accounts to filter down to the relevant ones.
+        for account in accounts:
+            _, api = self.twitter[account.bot_account_id]
+            for status in Cursor(api.user_timeline,
+                                 user_id=account.bot_account_id,
+                                 exclude_replies=True).items():
 
-            # Extract the quoted @realDonaldTrump tweet, if available.
-            try:
-                quoted_tweet_id = status.quoted_status_id
-            except AttributeError:
-                self.logs.warn('Skipping tweet: %s' % status)
-                continue
+                try:
+                    quoted_tweet_id = status.quoted_status_id
+                except AttributeError:
+                    self.logs.warn('Skipping tweet: %s' % status)
+                    continue
 
-            # Get the tweet details and add it to the list.
-            quoted_tweet = self.get_tweet(quoted_tweet_id)
-            tweets.append(quoted_tweet)
+                # Get the tweet details and add it to the list.
+                quoted_tweet = self.get_tweet(quoted_tweet_id)
+                tweets.append(quoted_tweet)
 
         self.logs.debug("Got tweets: %s" % tweets)
 
@@ -359,9 +388,15 @@ class TwitterListener(StreamListener):
             logs.error("Malformed tweet: %s" % tweet)
             return
 
-        # We're only interested in tweets from Mr. Trump himself, so skip the
-        # rest.
-        if user_id_str != TRUMP_USER_ID:
+        found = False
+
+        for account in accounts:
+            for account_to_follow in account.accounts_to_monitor:
+                if user_id_str == account_to_follow:
+                    found = True
+                    break
+
+        if not found:
             logs.debug("Skipping tweet from user: %s (%s)" %
                        (screen_name, user_id_str))
             return

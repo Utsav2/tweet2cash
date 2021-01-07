@@ -3,10 +3,9 @@ from threading import Timer
 from time import sleep
 
 from twitter import Twitter
+from twitter import accounts
 from twitter import TWITTER_CONSUMER_KEY
 from twitter import TWITTER_CONSUMER_SECRET
-from twitter import TWITTER_ACCESS_TOKEN
-from twitter import TWITTER_ACCESS_TOKEN_SECRET
 
 
 @fixture
@@ -17,8 +16,9 @@ def twitter():
 def test_environment_variables():
     assert TWITTER_CONSUMER_KEY
     assert TWITTER_CONSUMER_SECRET
-    assert TWITTER_ACCESS_TOKEN
-    assert TWITTER_ACCESS_TOKEN_SECRET
+    for account in accounts:
+        assert account.twitter_access_token
+        assert account.twitter_access_token_secret
 
 
 def callback(tweet):

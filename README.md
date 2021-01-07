@@ -1,16 +1,12 @@
-# Trump2Cash
+# TweetTradeBot
 
-This bot watches [Donald Trump's tweets](https://twitter.com/realDonaldTrump)
-and waits for him to mention any publicly traded companies. When he does, it
-uses sentiment analysis to determine whether his opinions are positive or
+This bot watches a list of twitter accounts and waits for them to mention any publicly traded companies. When they do, it
+uses sentiment analysis to determine whether their opinions are positive or
 negative toward those companies. The bot then automatically executes trades on
-the relevant stocks according to the expected market reaction. It also tweets
-out a summary of its findings in real time at
-[@Trump2Cash](https://twitter.com/Trump2Cash).
+the relevant stocks according to the expected market reaction. 
 
-*You can read more about the background story [here](https://trump2cash.biz).*
+This bot was forked from [Trump2Cash](https://github.com/maxbbraun/trump2cash).
 
-[![Trump2Cash](https://cdn-images-1.medium.com/max/1400/1*VbnhlLnZz0KvWO0QsM5Ihw.png)](https://trump2cash.biz)
 
 The code is written in Python and is meant to run on a
 [Google Compute Engine](https://cloud.google.com/compute/) instance. It uses the
