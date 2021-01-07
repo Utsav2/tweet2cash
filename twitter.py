@@ -97,11 +97,16 @@ class Twitter:
         self.twitter_listener = TwitterListener(
             callback=callback, logs_to_cloud=self.logs_to_cloud)
 
-        self.logs.debug("Starting streams")
+        self.logs.debug("Starting stream")
+        auth, _ = next(iter(self.twitter.values()))
+        to_follow = []
+
         for account in accounts:
-            auth, _ = self.twitter[account.bot_account_id]
-            twitter_stream = Stream(auth, self.twitter_listener)
-            twitter_stream.filter(follow=account.accounts_to_monitor)
+            to_follow.extend(account.accounts_to_monitor)
+
+        self.logs.debug("Monitoring" + str(to_follow))
+        twitter_stream = Stream(auth, self.twitter_listener)
+        twitter_stream.filter(follow=to_follow)
 
         # If we got here because of an API error, raise it.
         if self.twitter_listener and self.twitter_listener.get_error_status():
@@ -133,9 +138,11 @@ class Twitter:
             self.logs.error("Malformed tweet: %s" % tweet)
             return
 
-        _, api = self.twitter[user_id_str]
-        self.logs.info("Tweeting: %s" % text)
-        api.update_status(text)
+        for account in accounts:
+            if user_id_str in account.accounts_to_monitor:
+                _, api = self.twitter[account.bot_account_id]
+                self.logs.info("Tweeting: %s" % text)
+                api.update_status(text)
 
     def make_tweet_text(self, companies, link):
         """Generates the text for a tweet."""
@@ -211,12 +218,11 @@ class Twitter:
         return status._json
 
     def get_all_tweets(self):
-        """Looks up metadata for the most recent Trump tweets."""
+        """Looks up metadata for the most recent tweets."""
 
         tweets = []
 
-        # Only the 3,200 most recent tweets are available through the API. Use
-        # the bot accounts to filter down to the relevant ones.
+        # use the bot account's tweets
         for account in accounts:
             _, api = self.twitter[account.bot_account_id]
             for status in Cursor(api.user_timeline,

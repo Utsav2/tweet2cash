@@ -113,6 +113,8 @@ if __name__ == "__main__":
 
     # Look up the metadata for the tweets.
     tweets = twitter.get_all_tweets()
+    if not tweets:
+        raise ValueError('no tweets')
 
     events = []
     for tweet in tqdm(tweets):

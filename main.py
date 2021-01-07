@@ -11,7 +11,7 @@ from trading import Trading
 from twitter import Twitter
 
 # Whether to send all logs to the cloud instead of a local file.
-LOGS_TO_CLOUD = True
+LOGS_TO_CLOUD = False
 
 # The duration of the smallest backoff step in seconds.
 BACKOFF_STEP_S = 0.1
@@ -95,8 +95,11 @@ class Main:
             return
 
         # Trade stocks.
-        trading = Trading(logs_to_cloud=LOGS_TO_CLOUD)
-        trading.make_trades(companies)
+        try:
+            trading = Trading(logs_to_cloud=LOGS_TO_CLOUD)
+            trading.make_trades(companies)
+        except Exception as e:
+            logs.info("Failed to trade! %s" % e)
 
         # Tweet about it.
         twitter = Twitter(logs_to_cloud=LOGS_TO_CLOUD)
