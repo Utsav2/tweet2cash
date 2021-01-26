@@ -121,6 +121,14 @@ class Analysis:
             self.logs.warn("No tweet to find companies.")
             return None
 
+        # Collect all entities which are publicly traded companies, i.e.
+        # entities which have a known stock ticker symbol.
+        found_symbols = []
+
+        if tweet.get('symbols'):
+            for symbol in tweet['symbols']:
+                found_symbols.append(symbol)
+
         # Use the text of the tweet with any mentions expanded to improve
         # entity detection.
         text = self.get_expanded_text(tweet)
@@ -135,9 +143,6 @@ class Analysis:
         entities = self.language_client.analyze_entities(document).entities
         self.logs.debug("Found entities: %s" % self.entities_tostring(entities))
 
-        # Collect all entities which are publicly traded companies, i.e.
-        # entities which have a known stock ticker symbol.
-        companies = []
         for entity in entities:
 
             # Use the Freebase ID of the entity to find company data. Skip any
